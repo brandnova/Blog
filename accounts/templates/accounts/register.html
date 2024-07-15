@@ -1,0 +1,77 @@
+{% extends 'accounts/base.html' %}
+{% block title %} Register{% endblock %}
+{% block content %}
+ <main id="main">
+  <div class="container">
+    <h2>Register</h2>
+    <form method="POST">
+      {% csrf_token %}
+      <div class="form-group">
+        <label for="{{ form.first_name.id_for_label }}">First Name</label>
+        {{ form.first_name }}
+        {% if form.first_name.errors %}
+          <div class="invalid-feedback">
+            {{ form.first_name.errors }}
+          </div>
+        {% endif %}
+      </div>
+      <div class="form-group">
+        <label for="{{ form.last_name.id_for_label }}">Last Name</label>
+        {{ form.last_name }}
+        {% if form.last_name.errors %}
+          <div class="invalid-feedback">
+            {{ form.last_name.errors }}
+          </div>
+        {% endif %}
+      </div>
+      <div class="form-group">
+        <label for="{{ form.username.id_for_label }}">Username</label>
+        {{ form.username }}
+        {% if form.username.errors %}
+          <div class="invalid-feedback">
+            {{ form.username.errors }}
+          </div>
+        {% endif %}
+      </div>
+      <div class="form-group">
+        <label for="{{ form.email.id_for_label }}">Email</label>
+        {{ form.email }}
+        {% if form.email.errors %}
+          <div class="invalid-feedback">
+            {{ form.email.errors }}
+          </div>
+        {% endif %}
+      </div>
+      <div class="form-group">
+        <label for="{{ form.password1.id_for_label }}">Password</label>
+        {{ form.password1 }}
+        {% if form.password1.errors %}
+          <div class="invalid-feedback">
+            {{ form.password1.errors }}
+          </div>
+        {% endif %}
+      </div>
+      <div class="form-group">
+        <label for="{{ form.password2.id_for_label }}">Confirm Password</label>
+        {{ form.password2 }}
+        {% if form.password2.errors %}
+          <div class="invalid-feedback">
+            {{ form.password2.errors }}
+          </div>
+        {% endif %}
+      </div>
+      <div class="my-3">
+        <button type="submit" class="btn btn-success m-1">Register</button>
+        <a href="{% url "login" %}" class="btn btn-primary m-1"><i class="bi bi-box-arrow-in-left"></i>Login</a>
+      </div>
+    </form>
+    {% if messages %}
+      <ul class="messages">
+        {% for message in messages %}
+          <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+  </div>
+ </main>
+{% endblock %}
