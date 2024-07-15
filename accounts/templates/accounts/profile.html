@@ -1,0 +1,30 @@
+{% extends 'accounts/base.html' %}
+{% block title %} Profile{% endblock %}
+{% block content %}
+  <main id="main">
+    <div class="container">
+      <h2>Profile</h2>
+      <div>
+        <h3>User Info</h3>
+        <p>First Name: {{ request.user.first_name }}</p>
+        <p>Username: {{ request.user.username }}</p>
+        <p>Email: {{ request.user.email }}</p>
+      </div>
+      <div>
+        <h3>Edit Profile</h3>
+        <form method="post" enctype="multipart/form-data">
+          {% csrf_token %}
+          {{ u_form.as_p }}
+          {{ p_form.as_p }}
+          <button type="submit" class="btn btn-primary">Update</button>
+        </form>
+        <a href="{% url 'password_change' %}" class="btn btn-info m-3">Change Password</a>
+        <form method="post" action="{% url 'logout' %}" class="d-inline">
+          {% csrf_token %}
+          <button type="submit" class="btn btn-danger"><i class="bi bi-box-arrow-right"></i>Logout</button>
+        </form>
+        <a href="{% url "content_create" %}" class="btn btn-warning bg-opacity-50 m-3">Create Post</a>
+      </div>
+    </div>
+  </main>
+{% endblock %}

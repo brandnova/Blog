@@ -1,0 +1,27 @@
+<script type="text/javascript">
+    (function() {
+        var initCKEditor = function() {
+            if (typeof CKEDITOR === 'undefined') {
+                setTimeout(initCKEditor, 50);
+                return;
+            }
+
+            var $ = django.jQuery;
+
+            function initCKEditorInstance() {
+                $('textarea[data-type=ckeditor]').each(function(){
+                    var $textarea = $(this);
+                    var configName = $textarea.data('config-name');
+                    var config = window.CKEDITOR_CONFIGS[configName] || {};
+
+                    CKEDITOR.replace(this.id, config);
+                });
+            }
+
+            initCKEditorInstance();
+            $(document).on('formset:added', initCKEditorInstance);
+        };
+
+        setTimeout(initCKEditor, 50);
+    }());
+</script>
