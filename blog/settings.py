@@ -34,6 +34,7 @@ INSTALLED_APPS = [
     'ads',
     'ckeditor',
     'ckeditor_uploader',
+    'django.contrib.humanize',
 
 ]
 

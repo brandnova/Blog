@@ -1,0 +1,7 @@
+{% if ads %}
+    {% for ad_slug, ad_code in ads.items %}
+        <div class="ad-placement ad-{{ ad_slug }}">
+            {{ ad_code|safe }}
+        </div>
+    {% endfor %}
+{% endif %}

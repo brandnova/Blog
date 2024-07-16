@@ -43,14 +43,6 @@ def index(request):
     return render(request, 'core/index.html', context)
 
 
-def random_fan_fic(request):
-    # Fetch multiple random fan fic items
-    fan_fic_items = Content.objects.filter(category__name="Fan Fic").order_by('?')[:3]
-
-    # Render the template with the fan_fic_items
-    return render(request, 'core\index_include.html', {'fan_fic_items': fan_fic_items})
-
-
 def static_page_view(request, slug):
     page = get_object_or_404(StaticPage, slug=slug)
     context = {
