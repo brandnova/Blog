@@ -1,12 +1,11 @@
-# forms.py
-from django import forms
-from .models import Content
-from ckeditor_uploader.widgets import CKEditorUploadingWidget # type: ignore
+# from django import forms
+# from .models import Comment
 
-class ContentForm(forms.ModelForm):
-    highlight = forms.CharField(widget=CKEditorUploadingWidget())
-    content = forms.CharField(widget=CKEditorUploadingWidget())
-
-    class Meta:
-        model = Content
-        fields = ['title', 'slug', 'img', 'highlight', 'content', 'tags']
+# class CommentForm(forms.ModelForm):
+#     class Meta:
+#         model = Comment
+#         fields = ['text']
+    
+#     def __init__(self, *args, **kwargs):
+#         super().__init__(*args, **kwargs)
+#         self.fields['text'].widget.attrs.update({'class': 'form-control'})

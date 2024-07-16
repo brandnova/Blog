@@ -1,12 +1,14 @@
 {% extends 'accounts/base.html' %}
 {% block title %} Profile{% endblock %}
 {% block content %}
+{% load custom_filters %}
   <main id="main">
     <div class="container">
       <h2>Profile</h2>
       <div>
         <h3>User Info</h3>
         <p>First Name: {{ request.user.first_name }}</p>
+        <p>Last Name: {{ request.user.last_name }}</p>
         <p>Username: {{ request.user.username }}</p>
         <p>Email: {{ request.user.email }}</p>
       </div>
@@ -23,7 +25,10 @@
           {% csrf_token %}
           <button type="submit" class="btn btn-danger"><i class="bi bi-box-arrow-right"></i>Logout</button>
         </form>
-        <a href="{% url "content_create" %}" class="btn btn-warning bg-opacity-50 m-3">Create Post</a>
+        
+        {% if request.user.is_authenticated and request.user|has_group:"Author" %}
+          <a href="{% url 'admin:content_content_add' %}" class="btn btn-warning bg-opacity-50 m-3">Create Post</a>
+        {% endif %}
       </div>
     </div>
   </main>

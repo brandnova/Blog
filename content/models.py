@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.utils import timezone
 from ckeditor_uploader.fields import RichTextUploadingField # type: ignore
 
 class Category(models.Model):
@@ -32,11 +33,25 @@ class Content(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
-    genre = models.ManyToManyField(Genre, related_name='Genres', blank=True)
-    tags = models.ManyToManyField(Tag, related_name='Contents', blank=True)
-
+    genre = models.ManyToManyField(Genre, related_name='genres', blank=True)
+    tags = models.ManyToManyField(Tag, related_name='tags', blank=True)
     likes = models.ManyToManyField(User, related_name='Content_likes', blank=True)
     dislikes = models.ManyToManyField(User, related_name='Content_dislikes', blank=True)
 
     def __str__(self):
         return self.title
+
+class Comment(models.Model):
+    content = models.ForeignKey('Content', on_delete=models.CASCADE, related_name='comments')
+    parent = models.ForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, related_name='replies')
+    author = models.ForeignKey(User, on_delete=models.CASCADE)
+    text = models.TextField()
+    created_at = models.DateTimeField(default=timezone.now)
+    updated_at = models.DateTimeField(auto_now=True)
+    active = models.BooleanField(default=True)
+
+    class Meta:
+        ordering = ['-created_at']
+
+    def __str__(self):
+        return f'Comment by {self.author.username} on {self.content.title}'

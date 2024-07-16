@@ -1,9 +1,11 @@
 from django.contrib import admin
 from django.db import models
 from ckeditor_uploader.widgets import CKEditorUploadingWidget # type: ignore
-from .models import Content, Category, Genre, Tag
+from .models import Content, Category, Genre, Tag, Comment
 
 admin.site.register(Genre)
+admin.site.register(Comment)
+
 
 # Admin class for Content model
 @admin.register(Content)
