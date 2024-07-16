@@ -14,6 +14,9 @@ SECRET_KEY = 'django-insecure-frp4p(l^4+m&8+v5b#kce8*u5cw2g02v+qt^u&&l(g2vb#orj#
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+APPEND_SLASH = False
+
+
 ALLOWED_HOSTS = ['*']
 
 
