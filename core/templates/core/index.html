@@ -117,13 +117,13 @@
       </div>
     </section> <!-- End Post Grid Section -->
 
-    <section>
+    {% comment %} <section>
       <div class="container">
         <div class="text-center">
           {% include 'ads/ad_placement.html' %}
         </div><!-- End Ads -->
       </div>
-    </section>
+    </section> {% endcomment %}
 
     <!-- ======= Culture Category Section ======= -->
     <section class="category-section">
@@ -188,7 +188,7 @@
             {% for ffff in f_con6 %}
             <div class="post-entry-1 border-bottom">
               <div class="post-meta"><span class="date">{{ ffff.category.name }}</span> <span class="mx-1">&bullet;</span> <span>{{ ffff.created_at|date:"M jS 'y" }}</span></div>
-              <h2 class="mb-2"><a href="#">{{ ffff.title }}</a></h2>
+              <h2 class="mb-2"><a href="{% url 'content_detail' ffff.slug %}">{{ ffff.title }}</a></h2>
               <span class="author mb-3 d-block">{{ ffff.author.username }}</span>
             </div>
             {% endfor %}
