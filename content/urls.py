@@ -4,7 +4,7 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
-    path('', views.content_list, name='content_list'),
+    path('/', views.content_list, name='content_list'),
     path('category/<slug:category_slug>/', views.content_list, name='content_list_by_category'),
     path('tag/<slug:tag_slug>/', views.content_list, name='content_list_by_tag'),
     path('category/<slug:category_slug>/tag/<slug:tag_slug>/', views.content_list, name='content_list_by_category_and_tag'),
