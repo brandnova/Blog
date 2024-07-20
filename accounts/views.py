@@ -3,6 +3,11 @@ from django.contrib.auth import login, update_session_auth_hash, logout
 from django.contrib.auth.decorators import login_required
 from .forms import UserRegisterForm, UserUpdateForm, ProfileUpdateForm, CustomAuthenticationForm, CustomPasswordChangeForm
 from django.contrib import messages
+from content.models import Content, Comment
+from django.utils import timezone
+from datetime import timedelta
+# from newsletter.models import Subscription
+
 
 def register(request):
     # Redirect authenticated users to the profile page
@@ -14,6 +19,7 @@ def register(request):
         form = UserRegisterForm(request.POST)
         if form.is_valid():
             user = form.save()
+            # send_registration_email(user)
             login(request, user)  # Log the user in after registration
             username = form.cleaned_data.get('username')
             messages.success(request, f'Account created for {username}!')
@@ -45,23 +51,43 @@ def logout_view(request):
         logout(request)
         return redirect('login')
 
+
 @login_required
 def profile(request):
+    user_contents_count = Content.objects.filter(author=request.user).count()
+    user_comments_count = Comment.objects.filter(author=request.user).count()
+
+    # if user_contents_count >= 10:
+        # send_badge_email(request.user, 'Content Creator')
+
+    user_likes_count = sum(content.likes.count() for content in Content.objects.filter(author=request.user))
+    user_registration_duration = timezone.now() - request.user.date_joined
+    recent_logins = request.user.last_login and request.user.last_login >= timezone.now() - timedelta(days=7)
+    user_reviewed_posts_count = Comment.objects.filter(author=request.user).values('content').distinct().count()
+
+    u_form = UserUpdateForm(request.POST or None, instance=request.user)
+    p_form = ProfileUpdateForm(request.POST or None, request.FILES or None, instance=request.user.profile)
+    
     if request.method == 'POST':
-        u_form = UserUpdateForm(request.POST, instance=request.user)
-        p_form = ProfileUpdateForm(request.POST, request.FILES, instance=request.user.profile)
         if u_form.is_valid() and p_form.is_valid():
             u_form.save()
             p_form.save()
             messages.success(request, 'Your profile has been updated!')
             return redirect('profile')
-    else:
-        u_form = UserUpdateForm(instance=request.user)
-        p_form = ProfileUpdateForm(instance=request.user.profile)
-    return render(request, 'accounts/profile.html', {
-        'u_form': u_form, 
+
+    context = {
+        'u_form': u_form,
         'p_form': p_form,
-        })
+        'user_contents_count': user_contents_count,
+        'user_comments_count': user_comments_count,
+        'user_likes_count': user_likes_count,
+        'user_registration_duration': user_registration_duration,
+        'user_recent_logins': recent_logins,
+        'user_reviewed_posts_count': user_reviewed_posts_count,
+    }
+
+    return render(request, 'accounts/profile.html', context)
+
 
 @login_required
 def password_change(request):

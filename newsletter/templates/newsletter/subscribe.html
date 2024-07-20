@@ -1,0 +1,39 @@
+{% extends 'newsletter/email_base.html' %}
+{% block title %}Subscribe to Newsletter{% endblock  %}
+{% block content %}
+<main id="main">
+  <div class="container py-4">
+    <div class="card">
+        <div class="card-header text-center">
+            <h1>Subscribe to our Newsletter</h1>
+        </div>
+        <div class="card-body">
+            <form method="post">
+                {% csrf_token %}
+                <div class="mb-3">
+                    {{ form.non_field_errors }}
+                </div>
+                <div class="mb-3">
+                    {{ form.name.label_tag }}
+                    {{ form.name }}
+                    {{ form.name.errors }}
+                </div>
+                <div class="mb-3">
+                    {{ form.email.label_tag }}
+                    {{ form.email }}
+                    {{ form.email.errors }}
+                </div>
+                <button type="submit" class="btn btn-primary">Subscribe</button>
+            </form>
+            {% if messages %}
+                <ul>
+                    {% for message in messages %}
+                        <li>{{ message }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        </div>
+    </div>
+  </div>
+</main>
+{% endblock %}
