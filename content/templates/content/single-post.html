@@ -48,36 +48,6 @@
                   <a href="{% url 'like_content' slug=content.slug %}" class="m-2"><i class="bi bi-hand-thumbs-up {% if user in content.likes.all %}text-info{% else %}text-primary{% endif %} "></i> ({{ content.likes.count }})</a>
                   <a href="{% url 'dislike_content' slug=content.slug %}" class="m-2"><i class="bi bi-hand-thumbs-down {% if user in content.dislikes.all %}text-danger{% else %}text-primary{% endif %}"></i> ({{ content.dislikes.count }})</a>
 
-                  <i id="copy-url-button" class="bi bi-reply-all m-2" style="cursor: pointer;" title="Share"></i>
-
-                  <div id="copy-alert" class="alert alert-success alert-dismissible fade show my-3" role="alert" style="display: none;">
-                    <strong><i class="bi bi-clipboard-check"></i></strong> URL Copied to clipboard!
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                  </div>
-                  <script>
-                    document.addEventListener('DOMContentLoaded', function() {
-                        var copyButton = document.getElementById('copy-url-button');
-                        var copyAlert = document.getElementById('copy-alert');
-                        var pageUrl = window.location.href;
-                
-                        copyButton.addEventListener('click', function() {
-                            var tempInput = document.createElement('input');
-                            document.body.appendChild(tempInput);
-                            tempInput.value = pageUrl;
-                            tempInput.select();
-                            document.execCommand('copy');
-                            document.body.removeChild(tempInput);
-                
-                            // Show the alert
-                            copyAlert.style.display = 'block';
-                
-                            // Hide the alert after 2 seconds
-                            setTimeout(function() {
-                                copyAlert.style.display = 'none';
-                            }, 5000);
-                        });
-                    });
-                  </script>
                 </p>
               </div>
             </div><!-- End Single Post Content -->
@@ -285,14 +255,19 @@
             font-size: 24px;
             color: white;
         }
+        .copy:hover{
+          color: black !important;
+        }
         .social-icon.facebook { background-color: #3b5998; }
         .social-icon.twitter { background-color: #1da1f2; }
         .social-icon.linkedin { background-color: #0077b5; }
         .social-icon.email { background-color: #d44638; }
         .social-icon.whatsapp { background-color: #25d366; }
+        .social-icon.copy { background-color: #929292; }
       </style>
       <div class="card">
           <div class="card-body text-center">
+
               <h5 class="card-title">Share this post</h5>
               <p class="card-text">Spread the word about this amazing content on your favorite social media platform.</p>
               <div class="d-flex justify-content-center">
@@ -311,7 +286,41 @@
                   <a href="https://api.whatsapp.com/send?text={{ content.title }}%20{{ request.build_absolute_uri }}" target="_blank" class="m-2 social-icon whatsapp">
                     <i class="bi bi-whatsapp"></i>
                   </a>
+                  <div id="copy-url-button" class="m-2 social-icon copy" title="Copy to clipboard">
+                    <i class="bi bi-copy"></i>
+                  </div>
+                  
+                  <script>
+                    document.addEventListener('DOMContentLoaded', function() {
+                        var copyButton = document.getElementById('copy-url-button');
+                        var copyAlert = document.getElementById('copy-alert');
+                        var pageUrl = window.location.href;
+                
+                        copyButton.addEventListener('click', function() {
+                            var tempInput = document.createElement('input');
+                            document.body.appendChild(tempInput);
+                            tempInput.value = pageUrl;
+                            tempInput.select();
+                            document.execCommand('copy');
+                            document.body.removeChild(tempInput);
+                
+                            // Show the alert
+                            copyAlert.style.display = 'block';
+                
+                            // Hide the alert after 2 seconds
+                            setTimeout(function() {
+                                copyAlert.style.display = 'none';
+                            }, 5000);
+                        });
+                    });
+                  </script>
               </div>
+              <div class="d-flex justify-content-center">
+                <div id="copy-alert" class="alert alert-success alert-dismissible fade show my-3" role="alert" style="display: none; width: 40%;">
+                    <strong><i class="bi bi-clipboard-check"></i></strong> URL Copied to clipboard!
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            </div>
           </div>
       </div>
   </div>
