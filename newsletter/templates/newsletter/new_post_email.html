@@ -1,0 +1,18 @@
+{% extends 'newsletter/email_base.html' %}
+{% block title %}New Post: {{ post.title }}{% endblock %}
+{% load static %}
+{% block content %}
+<main id="main">
+    <div class="container p-3">
+        <h2>New Post: {{ post.title }}</h2>
+        <p>Published on: {{ post.created_at }}</p>
+        <p>Author: {{ post.author }}</p>
+        <hr>
+
+        <p>{{ post.content|truncatewords:50|safe }}</p> <!-- Adjust summary length as needed -->
+        <p><a href="{{ post_url }}" class="btn btn-sm btn-primary">Read more</a></p>
+        <hr>
+    </div>
+</main>
+{% endblock %}
+

@@ -1,5 +1,3 @@
-# templatetags/custom_filters.py
-
 from django import template
 from django.utils.safestring import mark_safe
 import re
@@ -16,4 +14,6 @@ def highlight_first_char(text):
 
 @register.filter(name='has_group')
 def has_group(user, group_name):
+    if user is None:
+        return False
     return user.groups.filter(name=group_name).exists()

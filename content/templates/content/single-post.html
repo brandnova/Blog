@@ -1,5 +1,5 @@
-{% extends 'core/base.html' %}
-{% block title %}Details{% endblock %}
+{% extends 'content/base.html' %}
+{% block title %}{{ content.title }}{% endblock %}
 {% load static %}
 {% load custom_filters %}
 {% block content %}
@@ -12,7 +12,8 @@
 
             <!-- ======= Single Post Content ======= -->
             <div class="single-post">
-              <div class="post-meta"><span class="date">{{ content.category.name }}</span> <span class="mx-1">&bullet;</span> <span>{{ content.created_at|date:"M jS 'y" }}</span> <span class="mx-1">&bullet;</span> <span>{{ content.author.username }}</span></div>
+              <div class="post-meta"><span class="date">{{ content.category.name }}</span> <span class="mx-1">&bullet;</span> <span>{{ content.created_at|date:"M jS 'y" }}</span> <span class="mx-1">&bullet;</span> <span>{{ content.author.username }}</span><span> <br> {% for gn in content.genre.all %} {% if forloop.first %} &bullet; {% endif %} {{ gn.name }} {% if not forloop.last %}, {% endif %} {% endfor %}
+            </span></div>
               <h1 class="mb-5 img-fluid">{{ content.title }}</h1>
 
               {% with content.highlight|safe|highlight_first_char as highlighted_text %}
@@ -23,13 +24,60 @@
               <figure class="my-4">
                 <img src="{{ content.img.url }}" alt="" class="img-fluid">
               </figure>
-
-              {{ content.content|safe }}
+              <i class="bi bi-volume-down" id="read-aloud" style="font-size:xx-large; cursor: pointer;" title="Read Aloud"></i>
+              <hr>
+              
+              <div id="post-content">
+                {{ content.content|safe }}
+              </div>
+              <script>
+                document.getElementById('read-aloud').addEventListener('click', function() {
+                    if ('speechSynthesis' in window) {
+                        var content = document.getElementById('post-content').innerText;
+                        var speech = new SpeechSynthesisUtterance(content);
+                        window.speechSynthesis.speak(speech);
+                    } else {
+                        alert('Sorry, your browser does not support text-to-speech functionality.');
+                    }
+                });
+              </script>
+              
               <hr>
               <div>
                 <p class="d-flex">
-                  <a href="{% url 'like_content' slug=content.slug %}" class="m-2"><i class="bi bi-hand-thumbs-up"></i> ({{ content.likes.count }})</a>
-                  <a href="{% url 'dislike_content' slug=content.slug %}" class="m-2"><i class="bi bi-hand-thumbs-down"></i> ({{ content.dislikes.count }})</a>
+                  <a href="{% url 'like_content' slug=content.slug %}" class="m-2"><i class="bi bi-hand-thumbs-up {% if user in content.likes.all %}text-info{% else %}text-primary{% endif %} "></i> ({{ content.likes.count }})</a>
+                  <a href="{% url 'dislike_content' slug=content.slug %}" class="m-2"><i class="bi bi-hand-thumbs-down {% if user in content.dislikes.all %}text-danger{% else %}text-primary{% endif %}"></i> ({{ content.dislikes.count }})</a>
+
+                  <i id="copy-url-button" class="bi bi-reply-all m-2" style="cursor: pointer;" title="Share"></i>
+
+                  <div id="copy-alert" class="alert alert-success alert-dismissible fade show my-3" role="alert" style="display: none;">
+                    <strong><i class="bi bi-clipboard-check"></i></strong> URL Copied to clipboard!
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                  </div>
+                  <script>
+                    document.addEventListener('DOMContentLoaded', function() {
+                        var copyButton = document.getElementById('copy-url-button');
+                        var copyAlert = document.getElementById('copy-alert');
+                        var pageUrl = window.location.href;
+                
+                        copyButton.addEventListener('click', function() {
+                            var tempInput = document.createElement('input');
+                            document.body.appendChild(tempInput);
+                            tempInput.value = pageUrl;
+                            tempInput.select();
+                            document.execCommand('copy');
+                            document.body.removeChild(tempInput);
+                
+                            // Show the alert
+                            copyAlert.style.display = 'block';
+                
+                            // Hide the alert after 2 seconds
+                            setTimeout(function() {
+                                copyAlert.style.display = 'none';
+                            }, 5000);
+                        });
+                    });
+                  </script>
                 </p>
               </div>
             </div><!-- End Single Post Content -->
@@ -47,13 +95,23 @@
                   </div>
                   <div class="flex-grow-1 ms-2 ms-sm-3">
                       <div class="comment-meta d-flex align-items-baseline">
-                          <h6 class="me-2">{{ comment.author.username }}</h6>
+                          <h6 class="me-2">{{ comment.author.username }} 
+                            <span style="font-size: x-small;">
+                              {% if comment.author.profile.badges %}
+                                {% for badge in comment.author.profile.badges.all %}
+                                  <i class="bi {{ badge.icon }}" title="{{ badge.name }}"></i>
+                                {% endfor %}
+                              {% endif %}
+                            </span> 
+                          </h6>
                           <span class="text-muted">{{ comment.created_at|date:"M jS 'y" }}</span>
                       </div>
                       <div class="comment-body">
                           {{ comment.text }}
                       </div>
-                      <a href="#" class="reply-link" data-comment-id="{{ comment.id }}">Reply</a>
+                      {% if request.user.is_authenticated %}
+                        <a href="#" class="reply-link" data-comment-id="{{ comment.id }}">Reply</a>
+                      {% endif %}
           
                       <!-- Replies -->
                       {% for reply in comment.replies.all %}
@@ -66,7 +124,15 @@
                               </div>
                               <div class="flex-grow-1 ms-2 ms-sm-3">
                                   <div class="reply-meta d-flex align-items-baseline">
-                                      <h6 class="mb-0 me-2">{{ reply.author.username }}</h6>
+                                      <h6 class="mb-0 me-2">{{ reply.author.username }} 
+                                        <span style="font-size: x-small;"> 
+                                          {% if comment.author.profile.badges %}
+                                            {% for badge in comment.author.profile.badges.all %}
+                                              <i class="bi {{ badge.icon }}" title="{{ badge.name }}"></i>
+                                            {% endfor %}
+                                          {% endif %}
+                                        </span>  
+                                      </h6>
                                       <span class="text-muted">{{ reply.created_at|date:"M jS 'y" }}</span>
                                   </div>
                                   <div class="reply-body">
@@ -79,12 +145,14 @@
                       <!-- End Replies -->
           
                       <!-- Reply Form -->
-                      <form method="post" class="reply-form" data-comment-id="{{ comment.id }}" style="display:none;">
+                      {% if request.user.is_authenticated %}
+                        <form method="post" class="reply-form" data-comment-id="{{ comment.id }}" style="display:none;">
                           {% csrf_token %}
                           {{ comment_form.as_p }}
                           <input type="hidden" name="parent" value="{{ comment.id }}">
                           <input type="submit" class="btn btn-primary" value="Post Reply">
-                      </form>
+                        </form>
+                      {% endif %}
                   </div>
               </div>
               {% endfor %}
@@ -101,22 +169,28 @@
             <!-- End Comments Section -->
 
             <!-- Comment Form -->
+
             <div class="row justify-content-center mt-5">
               <div class="col-lg-12">
-                <h5 class="comment-title">Leave a Comment</h5>
-                <form method="post">
-                  {% csrf_token %}
-                  <div class="row">
-                    <div class="col-12 mb-3">
-                      {{ comment_form.text }}
+                {% if request.user.is_authenticated %}
+                  <h5 class="comment-title">Leave a Comment</h5>
+                  <form method="post">
+                    {% csrf_token %}
+                    <div class="row">
+                      <div class="col-12 mb-3">
+                        {{ comment_form.text }}
+                      </div>
+                      <div class="col-12">
+                        <input type="submit" class="btn btn-primary" value="Post comment">
+                      </div>
                     </div>
-                    <div class="col-12">
-                      <input type="submit" class="btn btn-primary" value="Post comment">
-                    </div>
-                  </div>
-                </form>
+                  </form>
+                {% else %}
+                  <a href="{% url "login" %}" class="btn btn-secondary"> Login To Leave A Comment</a>
+                {% endif %}
               </div>
             </div>
+
             <!-- End Comment Form -->
 
           </div>
@@ -199,5 +273,47 @@
         </div>
       </div>
     </section>
+    <div class="share mt-5" >
+      <style>
+        .social-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: white;
+        }
+        .social-icon.facebook { background-color: #3b5998; }
+        .social-icon.twitter { background-color: #1da1f2; }
+        .social-icon.linkedin { background-color: #0077b5; }
+        .social-icon.email { background-color: #d44638; }
+        .social-icon.whatsapp { background-color: #25d366; }
+      </style>
+      <div class="card">
+          <div class="card-body text-center">
+              <h5 class="card-title">Share this post</h5>
+              <p class="card-text">Spread the word about this amazing content on your favorite social media platform.</p>
+              <div class="d-flex justify-content-center">
+                  <a href="https://www.facebook.com/sharer/sharer.php?u={{ request.build_absolute_uri }}" target="_blank" class="m-2 social-icon facebook">
+                      <i class="bi bi-facebook"></i>
+                  </a>
+                  <a href="https://twitter.com/intent/tweet?url={{ request.build_absolute_uri }}&text={{ content.title }}" target="_blank" class="m-2 social-icon twitter">
+                      <i class="bi bi-twitter"></i>
+                  </a>
+                  <a href="https://www.linkedin.com/shareArticle?url={{ request.build_absolute_uri }}&title={{ content.title }}" target="_blank" class="m-2 social-icon linkedin">
+                      <i class="bi bi-linkedin"></i>
+                  </a>
+                  <a href="mailto:?subject={{ content.title }}&body=Check out this article: {{ request.build_absolute_uri }}" target="_blank" class="m-2 social-icon email">
+                      <i class="bi bi-envelope"></i>
+                  </a>
+                  <a href="https://api.whatsapp.com/send?text={{ content.title }}%20{{ request.build_absolute_uri }}" target="_blank" class="m-2 social-icon whatsapp">
+                    <i class="bi bi-whatsapp"></i>
+                  </a>
+              </div>
+          </div>
+      </div>
+  </div>
   </main><!-- End #main -->
 {% endblock %}

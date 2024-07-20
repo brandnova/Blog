@@ -1,35 +1,86 @@
 {% extends 'accounts/base.html' %}
-{% block title %} Profile{% endblock %}
+{% block title %}Profile{% endblock %}
 {% block content %}
 {% load custom_filters %}
-  <main id="main">
-    <div class="container">
-      <h2>Profile</h2>
-      <div>
-        <h3>User Info</h3>
-        <p>First Name: {{ request.user.first_name }}</p>
-        <p>Last Name: {{ request.user.last_name }}</p>
-        <p>Username: {{ request.user.username }}</p>
-        <p>Email: {{ request.user.email }}</p>
+{% load static %}
+<main id="main" class="py-4">
+  <div class="container">
+    <div class="row">
+      <!-- User Info Section -->
+      <div class="col-md-4 mb-4">
+        <div class="card shadow-sm">
+          <div class="card-header bg-primary text-white">
+            <h3>User Info</h3>
+          </div>
+          <div class="card-body">
+            <p><strong>First Name:</strong> {{ request.user.first_name }}</p>
+            <p><strong>Last Name:</strong> {{ request.user.last_name }}</p>
+            <p><strong>Username:</strong> {{ request.user.username }}</p>
+            <p><strong>Email:</strong> {{ request.user.email }}</p>
+            <p><strong>Badges:</strong>
+              <!-- User has been registered for more than a year. -->
+              {% if user_registration_duration.days >= 365 %} <i class="bi bi-calendar-check text-secondary opacity-75"></i> {% endif %}
+              
+              <!-- User has posted more than 10 contents -->
+              {% if user_contents_count >= 10 %} <i class="bi bi-patch-check text-danger opacity-75"></i> {% endif %}
+
+              <!-- User has more than 100 likes on their posts -->
+              {% if user_likes_count >= 100 %} <i class="bi bi-trophy text-info opacity-75"></i> {% endif %}
+
+              <!-- User has commented on 20 or more different posts -->
+              {% if user_reviewed_posts_count >= 20 %} <i class="bi bi-journal-text text-primary opacity-75"></i> {% endif %}
+              
+              <!-- User is an admin -->
+              {% if request.user.is_superuser %} <i class="bi bi-shield-lock text-success opacity-75"></i> {% endif %}
+
+              <!-- User is an author -->
+              {% if request.user|has_group:"Author" %} <i class="bi bi-pen text-warning opacity-75"></i> {% endif %} 
+
+              <!-- User has logged in every day for the past week -->
+              {% if user_recent_logins %} <i class="bi bi-activity text-success "></i> {% endif %}
+
+              <!-- User has more than 50 comments on their posts -->
+              {% if user_comments_count >= 50 %} <i class="bi bi-chat-dots text-primary opacity-75"></i> {% endif %}
+              
+              <!-- User has been registered for less than a month -->
+              {% if user_registration_duration.days < 30 %} <i class="bi bi-person-fill text-danger"></i> {% endif %}
+            </p>
+            
+            {% if request.user.is_authenticated and request.user|has_group:"Author" %}
+              <div class="d-flex justify-content-end">
+                <a href="{% url 'admin:content_content_add' %}" class="btn btn-sm btn-warning m-1">Create Post</a>
+              </div>
+            {% endif %}
+          </div>
+        </div>
       </div>
-      <div>
-        <h3>Edit Profile</h3>
-        <form method="post" enctype="multipart/form-data">
-          {% csrf_token %}
-          {{ u_form.as_p }}
-          {{ p_form.as_p }}
-          <button type="submit" class="btn btn-primary">Update</button>
-        </form>
-        <a href="{% url 'password_change' %}" class="btn btn-info m-3">Change Password</a>
-        <form method="post" action="{% url 'logout' %}" class="d-inline">
-          {% csrf_token %}
-          <button type="submit" class="btn btn-danger"><i class="bi bi-box-arrow-right"></i>Logout</button>
-        </form>
-        
-        {% if request.user.is_authenticated and request.user|has_group:"Author" %}
-          <a href="{% url 'admin:content_content_add' %}" class="btn btn-warning bg-opacity-50 m-3">Create Post</a>
-        {% endif %}
+      
+      <!-- Edit Profile Section -->
+      <div class="col-md-8 mb-4">
+        <div class="card shadow-sm">
+          <div class="card-header bg-success text-white">
+            <h3>Edit Profile</h3>
+          </div>
+          <div class="card-body">
+            <form method="post" enctype="multipart/form-data">
+              {% csrf_token %}
+              <div class="text-center mb-4">
+                <img src="{% if request.user.profile.avatar %} {{ request.user.profile.avatar.url }} {% else %} {% static 'assets/img/download.PNG' %} {% endif %}" alt="User Avatar" class="rounded-circle img-thumbnail" width="150">
+              </div>
+              {{ u_form.as_p }}
+              {{ p_form.as_p }}
+              <button type="submit" class="btn btn-success">Update</button>
+            </form>
+            <hr>
+            <a href="{% url 'password_change' %}" class="btn btn-info m-1">Change Password</a>
+            <form method="post" action="{% url 'logout' %}" class="d-inline">
+              {% csrf_token %}
+              <button type="submit" class="btn btn-danger m-1"><i class="bi bi-box-arrow-right"></i> Logout</button>
+            </form>
+          </div>
+        </div>
       </div>
     </div>
-  </main>
+  </div>
+</main>
 {% endblock %}
