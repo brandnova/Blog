@@ -38,13 +38,20 @@ def email_temp(request, slug, user_id):
     
     return render(request, 'newsletter/email_base.html', context)
 
-# def welcome_email(request, user_id):
-#     user = get_object_or_404(Profile.user, id=user_id)
-#     site_settings = SiteSettings.objects.first()
+def welcome_email(request, user_id):
+    site_settings = SiteSettings.objects.first()
     
-#     context = {
-#         'user': user,
-#         'site_settings': site_settings,
-#     }
+    context = {
+        'site_settings': site_settings,
+    }
     
-#     return render(request, 'newsletter/welcome_email.html', context)
+    return render(request, 'newsletter/welcome_email.html', context)
+
+def welcome_email(request, user_id):
+    site_settings = SiteSettings.objects.first()
+    
+    context = {
+        'site_settings': site_settings,
+    }
+    
+    return render(request, 'newsletter/welcome_email.html', context)
