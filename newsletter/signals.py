@@ -22,9 +22,10 @@ def send_new_post_email(sender, instance, created, **kwargs):
         post = instance
         recipients = Subscription.objects.values_list('email', flat=True)
         subject = f'New Post: {post.title}'
-        site_url = SiteSettings.objects.first().og_url  # Fetch the site URL from SiteSettings
-        post_url = f'{site_url}{post.get_absolute_url()}'  # Correctly concatenate URL
-        html_message = render_to_string('newsletter/new_post_email.html', {'post': post, 'post_url': post_url})
+        site_url = SiteSettings.objects.first().og_url  
+        site_settings = SiteSettings.objects.first()
+        post_url = f'{site_url}{post.get_absolute_url()}'  
+        html_message = render_to_string('newsletter/new_post_email.html', {'post': post, 'post_url': post_url, 'site_settings': site_settings})
         plain_message = strip_tags(html_message)
         from_email = settings.DEFAULT_FROM_EMAIL
         

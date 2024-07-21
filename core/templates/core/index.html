@@ -117,13 +117,25 @@
       </div>
     </section> <!-- End Post Grid Section -->
 
-    {% comment %} <section>
+    <section>
       <div class="container">
         <div class="text-center">
           {% include 'ads/ad_placement.html' %}
         </div><!-- End Ads -->
       </div>
-    </section> {% endcomment %}
+    </section>
+    <section>
+      <!-- Ad Placement for home -->
+    <div class="container">
+      {% for ad in ads_home %}
+        {% if ad.placement.name == 'Home' %}
+          <div class="ad" id="{{ ad.placement.slug }}">
+            {{ ad.code|safe }}
+          </div>
+        {% endif %}
+      {% endfor %}
+    </div>
+    </section>
 
     <!-- ======= Culture Category Section ======= -->
     <section class="category-section">
@@ -158,6 +170,7 @@
 
             <div class="row">
               <div class="col-lg-4">
+                
                 <div class="post-entry-1 border-bottom">
                   <a href="{% url 'content_detail' f_con3.slug %}"><img src="{{ f_con3.img.url }}" alt="" class="img-fluid"></a>
                   <div class="post-meta"><span class="date">{{ f_con3.category.name }}</span> <span class="mx-1">&bullet;</span> <span>{{ f_con3.created_at|date:"M jS 'y" }}</span></div>
@@ -172,6 +185,7 @@
                   <span class="author mb-3 d-block">{{ f_con4.author.username }}</span>
                 </div>
               </div>
+
               <div class="col-lg-8">
                 <div class="post-entry-1">
                   <a href="{% url 'content_detail' f_con5.slug %}"><img src="{{ f_con5.img.url }}" alt="" class="img-fluid"></a>
@@ -414,6 +428,21 @@
         </div> <!-- End .row -->
       </div>
     </section><!-- End Lifestyle Category Section -->
+    
+    <section>
+      <!-- #############Try and make this a caroucel############# -->
+
+      <!-- Ad Placement for Footer -->
+    <div class="container">
+      {% for ad in ads_footer %}
+        {% if ad.placement.name == 'Footer' %}
+          <div class="ad" id="{{ ad.placement.slug }}">
+            {{ ad.code|safe }}
+          </div>
+        {% endif %}
+      {% endfor %}
+    </div>
+    </section>
 
   </main><!-- End #main -->
 {% endblock  %}

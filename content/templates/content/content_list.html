@@ -13,20 +13,20 @@
 
             {% for content in contents %}
                 <div class="d-md-flex post-entry-2 half">
-                <a href="{% url 'content_detail' slug=content.slug %}" class="me-4 thumbnail">
-                    <img src="{{ content.img.url }}" alt="" class="img-fluid">
-                </a>
-                <div>
-                    <div class="post-meta"><span class="date">{{ content.category.name }}</span> <span class="mx-1">&bullet;</span> <span>{{ content.created_at|date:"M jS 'y" }}</span></div>
-                    <h3><a href="{% url 'content_detail' slug=content.slug %}">{{ content.title }}</a></h3>
-                    <p>{{ content.highlight|safe }}</p>
-                    <div class="d-flex align-items-center author">
-                    <div class="photo"><img src="{{ content.author.profile.avatar.url }}" alt="" class="img-fluid"></div>
-                    <div class="name">
-                        <h3 class="m-0 p-0">{{ content.author.username }}</h3>
-                    </div>
-                    </div>
-                </div>
+                  <a href="{% url 'content_detail' slug=content.slug %}" class="me-4 thumbnail">
+                      <img src="{{ content.img.url }}" alt="" class="img-fluid">
+                  </a>
+                  <div>
+                      <div class="post-meta"><span class="date">{{ content.category.name }}</span> <span class="mx-1">&bullet;</span> <span>{{ content.created_at|date:"M jS 'y" }}</span></div>
+                      <h3><a href="{% url 'content_detail' slug=content.slug %}">{{ content.title }}</a></h3>
+                      <p>{{ content.highlight|safe }}</p>
+                      <div class="d-flex align-items-center author">
+                      <div class="photo"><img src="{{ content.author.profile.avatar.url }}" alt="" class="img-fluid"></div>
+                      <div class="name">
+                          <h3 class="m-0 p-0">{{ content.author.username }}</h3>
+                      </div>
+                      </div>
+                  </div>
                 </div>
             {% endfor %}
 

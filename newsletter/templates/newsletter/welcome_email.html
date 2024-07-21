@@ -1,10 +1,12 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Welcome to {{ settings.site_name }}!</title>
-</head>
-<body>
-    <h1>Welcome, {{ user.first_name }} {{ user.last_name }}!</h1>
-    <p>Thank you for registering on our site. We are glad to have you with us.</p>
-</body>
-</html>
+{% extends 'newsletter/email_base.html' %}
+{% block title %}Welcome to {{ site_name }}!{% endblock %}
+{% load static %}
+{% block content %}
+    <main id="main">
+        <div class="container">
+            <h1>Welcome, {{ user.first_name }} {{ user.last_name }}!</h1>
+            <p>Thank you for registering on {{ site_name }}. We are glad to have you with us.</p>
+        </div>
+    </main>
+{% endblock %}
+
