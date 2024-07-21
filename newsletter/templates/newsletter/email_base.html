@@ -42,7 +42,7 @@
     <!-- ======= Header ======= -->
     <header id="header" class="header d-flex align-items-center fixed-top">
         <div class="container-fluid container-xl d-flex justify-content-center align-items-center text-center">
-            <a href="{% url 'index' %}" class="logo d-flex align-items-center">
+            <div class="logo d-flex align-items-center">
                 <!-- Uncomment the line below if you also wish to use an image logo -->
                 {% if settings.logo %}
                     <img src="{{ settings.logo.url }}" alt="Logo" class="img-fluid">
@@ -50,7 +50,7 @@
                     <img src="{% static 'assets/img/valiux.png' %}" alt="Logo" class="img-fluid">
                 {% endif %}
                 <h1 class="ms-2 mb-0">{{ settings.site_name }}</h1>
-            </a>
+            </div>
         </div>
     </header><!-- End Header -->
 

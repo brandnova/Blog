@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, update_session_auth_hash, logout
 from django.contrib.auth.decorators import login_required
+from ads.models import Ad
 from .forms import UserRegisterForm, UserUpdateForm, ProfileUpdateForm, CustomAuthenticationForm, CustomPasswordChangeForm
 from django.contrib import messages
 from content.models import Content, Comment
@@ -56,6 +57,7 @@ def logout_view(request):
 def profile(request):
     user_contents_count = Content.objects.filter(author=request.user).count()
     user_comments_count = Comment.objects.filter(author=request.user).count()
+    ads_base = Ad.objects.filter(placement__name="Base", active=True).first()
 
     # if user_contents_count >= 10:
         # send_badge_email(request.user, 'Content Creator')
@@ -84,6 +86,7 @@ def profile(request):
         'user_registration_duration': user_registration_duration,
         'user_recent_logins': recent_logins,
         'user_reviewed_posts_count': user_reviewed_posts_count,
+        'ads_base': ads_base,
     }
 
     return render(request, 'accounts/profile.html', context)
@@ -91,6 +94,7 @@ def profile(request):
 
 @login_required
 def password_change(request):
+    ads_base = Ad.objects.filter(placement__name="Base", active=True).first()
     if request.method == 'POST':
         form = CustomPasswordChangeForm(request.user, request.POST)
         if form.is_valid():
@@ -102,4 +106,4 @@ def password_change(request):
             messages.error(request, 'Please correct the error below.')
     else:
         form = CustomPasswordChangeForm(request.user)
-    return render(request, 'accounts/password_change.html', {'form': form})
+    return render(request, 'accounts/password_change.html', {'form': form, 'ads_base': ads_base,})

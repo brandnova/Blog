@@ -3,9 +3,35 @@
 {% load static %}
 {% block content %}
 <main id="main">
+    <!-- #############Try and make this a caroucel############# -->
+    <div class="container my-5">
+        {% if ads_static %}
+        {% for ad in ads_static %}
+            <div class="ad" id="{{ ad.placement.slug }}">
+            {{ ad.code|safe }}
+            </div>
+        {% endfor %}
+        {% else %}
+        <p>No ads available at the moment.</p>
+        {% endif %}
+    </div>
+    
     <div class="container">
         <h1>{{ page.title }}</h1>
         <p>{{ page.content|safe }}</p>
+    </div>
+
+    <!-- #############Try and make this a caroucel############# -->
+    <div class="container my-5">
+        {% if ads_static %}
+        {% for ad in ads_static %}
+            <div class="ad" id="{{ ad.placement.slug }}">
+            {{ ad.code|safe }}
+            </div>
+        {% endfor %}
+        {% else %}
+        <p>No ads available at the moment.</p>
+        {% endif %}
     </div>
 </main>
 {% endblock %}

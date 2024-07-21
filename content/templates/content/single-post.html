@@ -4,14 +4,22 @@
 {% load custom_filters %}
 {% block content %}
   <main id="main">
-  
     <section class="single-post-content">
       <div class="container">
         <div class="row">
           <div class="col-md-9 post-content" data-aos="fade-up">
 
+            
+
             <!-- ======= Single Post Content ======= -->
             <div class="single-post">
+              <div class="container my-3">
+                {% if ads_details_top %}
+                  <div class="ad" id="{{ ads_details_top.placement.slug }}">
+                    {{ ads_details_top.code|safe }}
+                  </div>
+                {% endif %}
+              </div>
               <div class="post-meta"><span class="date">{{ content.category.name }}</span> <span class="mx-1">&bullet;</span> <span>{{ content.created_at|date:"M jS 'y" }}</span> <span class="mx-1">&bullet;</span> <span>{{ content.author.username }}</span><span> <br> {% for gn in content.genre.all %} {% if forloop.first %} &bullet; {% endif %} {{ gn.name }} {% if not forloop.last %}, {% endif %} {% endfor %}
             </span></div>
               <h1 class="mb-5 img-fluid">{{ content.title }}</h1>
@@ -156,7 +164,7 @@
                     </div>
                   </form>
                 {% else %}
-                  <a href="{% url "login" %}" class="btn btn-secondary"> Login To Leave A Comment</a>
+                  <a href="{% url "login" %}" class="btn btn-secondary"> Login To Comment</a>
                 {% endif %}
               </div>
             </div>
@@ -239,6 +247,28 @@
                 {% endfor %}
               </ul>
             </div><!-- End Categories -->
+
+            {% comment %} <div class="text-center">
+              {% include 'ads/ad_placement.html' %}
+            </div><!-- End Ads include --> {% endcomment %}
+          
+            <div class="aside-block">
+              <h3 class="aside-title">Ads</h3>
+              <ul class="aside-tags list-unstyled">
+                <div class="header-ads">
+                  {% for ad in ads %}
+                    {% if ad.placement.name == 'Side Contents' %}
+                      <div class="ad" id="{{ ad.placement.slug }}">
+                        {{ ad.code|safe }}
+                      </div>
+                    {% endif %}
+                  {% endfor %}
+                </div><!-- End Header Ads -->
+              </ul>
+            </div><!-- End Ads -->
+          
+            <!-- Debugging output -->
+            {% comment %} <pre>{{ ads|default:"No ads found" }}</pre> {% endcomment %}
           </div>
         </div>
       </div>
@@ -324,5 +354,6 @@
           </div>
       </div>
   </div>
+  
   </main><!-- End #main -->
 {% endblock %}
