@@ -7,10 +7,12 @@ from core.models import SiteSettings
 
 
 def send_welcome_email(user):
-    site_settings = SiteSettings.objects.first()
+    site_url = SiteSettings.objects.first().og_url
     site_name = SiteSettings.objects.first().site_name
+    site_mail = SiteSettings.objects.first().contact_email
+    sub_url = f'{site_url}/newsletter/subscribe'
     subject = f'Welcome to {site_name}!'
-    html_message = render_to_string('newsletter/welcome_email.html', {'user': user, 'site_settings': site_settings,})
+    html_message = render_to_string('newsletter/welcome_email.html', {'user': user, 'sub_url': sub_url, 'site_mail': site_mail, 'site_name': site_name, })
     plain_message = strip_tags(html_message)
     from_email = settings.DEFAULT_FROM_EMAIL
     to = user.email

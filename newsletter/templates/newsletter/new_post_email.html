@@ -1,17 +1,40 @@
 {% extends 'newsletter/email_base.html' %}
-{% block title %}New Post: {{ post.title }}{% endblock %}
 {% load static %}
 {% block content %}
 <main id="main">
-    <div class="container p-3">
-        <h2>New Post: {{ post.title }}</h2>
-        <p>Published on: {{ post.created_at }}</p>
-        <p>Author: {{ post.author }}</p>
-        <hr>
+    <div class="container my-4">
+        <div class="post-container">
+            <h3 class="post-title">{{ post.title }}</h3>
+            <p class="post-category">Category: {{ post.category }}</p>
+            <p class="post-date">Published on: {{ post.created_at }}</p>
+            <p class="post-author">
+                <span>Author: {{ post.author }}</span>
+            </p>
+            <hr>
 
-        <p>{{ post.content|truncatewords:50|safe }}</p>
-        <p><a href="{{ post_url }}" class="btn btn-sm btn-primary">Read more</a></p>
-        <hr>
+            <p>{{ post.content|truncatewords:50|safe }}</p>
+            <p><a href="{{ post_url }}" class="btn btn-primary btn-sm">Read more</a></p>
+            <hr>
+
+            <div class="social-share ">
+                <p>Share this post:</p>
+                <a href="https://twitter.com/share?url={{ post_url }}" target="_blank" class="btn btn-outline-primary btn-sm">
+                    <i class="bi bi-twitter"></i> Twitter
+                </a>
+                <a href="https://www.facebook.com/sharer/sharer.php?u={{ post_url }}" target="_blank" class="btn btn-outline-primary btn-sm">
+                    <i class="bi bi-facebook"></i> Facebook
+                </a>
+                <a href="https://www.linkedin.com/shareArticle?mini=true&url={{ post_url }}" target="_blank" class="btn btn-outline-primary btn-sm">
+                    <i class="bi bi-linkedin"></i> LinkedIn
+                </a>
+                <a href="https://api.whatsapp.com/send?text={{ post_url }}" target="_blank" class="btn btn-outline-success btn-sm">
+                    <i class="bi bi-whatsapp"></i> WhatsApp
+                </a>
+            </div>
+
+            <hr>
+            <p>Thank you for being a part of our community. Stay tuned for more updates!</p>
+        </div>
     </div>
 </main>
 {% endblock %}

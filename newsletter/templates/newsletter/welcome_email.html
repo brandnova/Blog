@@ -2,11 +2,29 @@
 {% block title %}Welcome to {{ site_name }}!{% endblock %}
 {% load static %}
 {% block content %}
-    <main id="main">
-        <div class="container">
-            <h1>Welcome, {{ user.first_name }} {{ user.last_name }}!</h1>
-            <p>Thank you for registering on {{ site_name }}. We are glad to have you with us.</p>
-        </div>
-    </main>
+<div class="main">
+    <div class="container">
+        <h1>Welcome, <span class="highlight">{{ user.first_name }} {{ user.last_name }}</span>!</h1>
+        <p>We are excited to have you join our community at <span class="highlight">{{ site_name }}</span>. Your registration is the first step toward an amazing journey with us. Here’s a glimpse of what you can expect:</p>
+        
+        <h2>Why You'll Love It Here</h2>
+        <ul style="text-align: left; max-width: 600px; margin: 0 auto; font-size: 18px;">
+            <li><strong>Exclusive Content:</strong> Gain access to lots of articles, stories, and many more content.</li>
+            <li><strong>Community Support:</strong> Connect with like-minded individuals and share your unique views on different topics.</li>
+            <li><strong>Regular Updates:</strong> Stay informed with our regular news, updates, and posts.</li>
+        </ul>
+        
+        <h2>Get Started</h2>
+        <p>To get the most out of your experience, please take a moment to subscribe to our newsletter.</p>
+        <a href="{{ sub_url }}" class="btn-primary">Subscribe to Newsletter</a>
+        
+        <h2>Need Help?</h2>
+        <p>If you have any questions or need assistance, our support team is here to help. Feel free to <a href="mailto:{{ site_mail }}">contact us</a> anytime.</p>
+        
+        <p>Welcome aboard, and we look forward to seeing you thrive with us!</p>
+        
+        <p>Best Regards,<br>The <span class="highlight">{{ site_name }}</span> Team</p>
+    </div>
+</div>
 {% endblock %}
 
